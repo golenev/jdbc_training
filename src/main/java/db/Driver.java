@@ -13,13 +13,11 @@ public class Driver {
    delete();
     }
 
-
     public static void create() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
         statement = connection.createStatement();
         statement.executeUpdate("INSERT project  (id, name) VALUES ('9', 'Volgograd');");
-
     }
 
     public static void read() throws SQLException {
@@ -27,14 +25,12 @@ public class Driver {
         while (resultSet.next()) {
             System.out.println(resultSet.getString("id") + resultSet.getString("name"));
         }
-
     }
 
     public static void update () throws SQLException {
         Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
         statement = connection.createStatement();
         statement.executeUpdate("update project SET name = 'Wolgograd' where id = 9 ;");
-
     }
 
     public static void delete() throws SQLException {
