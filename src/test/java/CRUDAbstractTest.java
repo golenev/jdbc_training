@@ -1,5 +1,6 @@
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +16,7 @@ abstract public class CRUDAbstractTest {
     private Statement statement;
 
 
-    @BeforeClass
+    @BeforeTest
     void init() throws ClassNotFoundException, IOException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try (FileInputStream configFile = new FileInputStream("src/test/resources/jdbc.properties")) {

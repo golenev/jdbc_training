@@ -1,5 +1,7 @@
 package project;
 
+import utils.RowsName;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ public class ProjectCRUD {
     public static String jdbcUsername = "root";
     public static String jdbcPassword = "123456";
     public static PreparedStatement preparedStatement;
-
+    public static Connection connection;
 
     public void create(String sql) throws ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -26,12 +28,13 @@ public class ProjectCRUD {
         List<TestEntity> result = new ArrayList<>();
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()) {
-            result.add(new TestEntity(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("status_id"),
-                    resultSet.getString("method_name"), resultSet.getInt("project_id"),
-                    resultSet.getInt("session_id"), resultSet.getString("start_time"),
-                    resultSet.getString("end_time"), resultSet.getString("env"), resultSet.getString("browser"),
-                    resultSet.getInt("author_id")));
-
+            result.add(new TestEntity(resultSet.getInt(RowsName.ID.getValue()), resultSet.getString(RowsName.NAME.getValue()),
+                    resultSet.getInt(RowsName.STATUS_ID.getValue()),
+                    resultSet.getString(RowsName.METHOD_NAME.getValue()), resultSet.getInt(RowsName.PROJECT_ID.getValue()),
+                    resultSet.getInt(RowsName.SESSION_ID.getValue()), resultSet.getString(RowsName.START_TIME.getValue()),
+                    resultSet.getString(RowsName.END_TIME.getValue()), resultSet.getString(RowsName.ENV.getValue()),
+                    resultSet.getString(RowsName.BROWSER.getValue()),
+                    resultSet.getInt(RowsName.AUTHOR_ID.getValue())));
         }
         return result;
     }
