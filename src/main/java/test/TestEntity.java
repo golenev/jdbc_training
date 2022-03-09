@@ -4,7 +4,7 @@ public class TestEntity {
     private Integer id;
     private String name;
 
-    public TestEntity(Integer id, String name) {
+    public TestEntity(Integer id) {
         this.id = id;
         this.name = name;
     }

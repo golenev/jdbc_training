@@ -37,4 +37,5 @@ abstract public class CRUDAbstractTest {
     public Statement getStatement() {
         return statement;
     }
+
 }
