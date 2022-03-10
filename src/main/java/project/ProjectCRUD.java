@@ -1,11 +1,9 @@
 package project;
 
 import utils.RowsName;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import static utils.TestingConfigurations.*;
 
 public class ProjectCRUD {
@@ -19,7 +17,6 @@ public class ProjectCRUD {
         statement = connection.createStatement();
         statement.executeUpdate(sql);
     }
-
 
     public List<TestEntity> read(String sql, Statement statement) throws SQLException {
         List<TestEntity> result = new ArrayList<>();
