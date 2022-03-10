@@ -45,10 +45,12 @@ public class ProjectCRUDTest extends CRUDAbstractTest {
             ResultSet row = rowSelector.executeQuery();
             Assert.assertTrue(row.next());
             TestEntity test = new TestEntity(row);
+            test.setProject_id(project_id);
+            test.setAuthor_id(author_id);
             System.out.println(id);
             System.out.println(test);
 
-            // Assert.assertTrue(test.insert());
+             Assert.assertTrue(test.insert());
 
         }
 

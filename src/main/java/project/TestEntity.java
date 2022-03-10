@@ -1,6 +1,7 @@
 package project;
 
-import java.io.FileInputStream;
+import utils.DataBase;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
@@ -17,11 +18,10 @@ public class TestEntity {
     private String end_time;
     private String env;
     private String browser;
-    private long author_id;
+    private int author_id;
     private static Properties prop = new Properties();
-    private static Connection connection;
-    private static Statement statement;
     private static PreparedStatement rowUpdater = null;
+
 
     public TestEntity(ResultSet resultSet) throws SQLException {
         this.id = resultSet.getInt(1);
@@ -34,12 +34,12 @@ public class TestEntity {
         this.end_time = resultSet.getString(8);
         this.env = resultSet.getString(9);
         this.browser = resultSet.getString(10);
-        this.author_id = resultSet.getLong(11);
+        this.author_id = resultSet.getInt(11);
     }
 
     public TestEntity(int id, String name, int status_id, String method_name, int project_id,
                       int session_id, String start_time, String end_time, String env,
-                      String browser, long author_id) {
+                      String browser, int author_id) {
         this.id = id;
         this.name = name;
         this.status_id = status_id;
@@ -53,36 +53,30 @@ public class TestEntity {
         this.author_id = author_id;
     }
 
-    public static void init() throws ClassNotFoundException, IOException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        try (FileInputStream configFile = new FileInputStream("src/test/resources/jdbc.properties")) {
-            prop.load(configFile);
-        }
-        connection = DriverManager.getConnection(prop.getProperty("jdbcURL"), prop.getProperty("jdbcUsername"), prop.getProperty("jdbcPassword"));
-        // statement = connection.createStatement();
-        rowUpdater = connection.prepareStatement("insert into test (`name`, `status_id`, " +
-                "`method_name`, `project_id`, `session_id`, `start_time`, `end_time`, `env`, `browser`, 'author_id')" +
-                " VALUES (?,?,?,?,?,?,?,?,?,?)");
-    }
-
     public boolean insert() throws SQLException, IOException, ClassNotFoundException {
         if (rowUpdater == null) {
-            init();
+            Connection connection = DataBase.getConnection();
+            rowUpdater = connection.prepareStatement("insert into test (`name`, `status_id`, " +
+                    "`method_name`, `project_id`, `session_id`, `start_time`, `end_time`, `env`, `browser`, `author_id`)" +
+                    " VALUES (?,?,?,?,?,?,?,?,?,?)");
         }
+        System.out.println(this.toString());
         rowUpdater.setString(1, this.getName());
-        rowUpdater.setString(2, this.getName());
-        rowUpdater.setString(3, this.getName());
-        rowUpdater.setString(4, this.getName());
-        rowUpdater.setString(5, this.getName());
-        rowUpdater.setString(6, this.getName());
-        rowUpdater.setString(7, this.getName());
-        rowUpdater.setString(8, this.getName());
-        rowUpdater.setString(9, this.getName());
-        rowUpdater.setString(10, this.getName());
+        rowUpdater.setInt(2, this.getStatus_id());
+        rowUpdater.setString(3, this.getMethod_name());
+        rowUpdater.setInt(4, this.getProject_id());
+        rowUpdater.setInt(5, this.getSession_id());
+        rowUpdater.setNull(6, 0);
+        rowUpdater.setString(7, this.getEnd_time());
+        rowUpdater.setString(8, this.getEnv());
+        rowUpdater.setString(9, this.getBrowser());
+        rowUpdater.setInt(10, this.getAuthor_id());
+        System.out.println(rowUpdater);
         try {
             rowUpdater.executeUpdate();
             return true;
         } catch (SQLException ex) {
+            System.out.println(ex);
             return false;
         }
     }
@@ -128,8 +122,16 @@ public class TestEntity {
         return browser;
     }
 
-    public long getAuthor_id() {
+    public int getAuthor_id() {
         return author_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
+    }
+
+    public void setAuthor_id(int author_id) {
+        this.author_id = author_id;
     }
 
     @Override

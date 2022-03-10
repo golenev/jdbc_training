@@ -34,15 +34,3 @@ public enum RowsName {
     }
 }
 
-
-/*this.id = id;
-        this.name = name;
-        this.status_id = status_id;
-        this.method_name = method_name;
-        this.project_id = project_id;
-        this.session_id = session_id;
-        this.start_time = start_time;
-        this.end_time = end_time;
-        this.env = env;
-        this.browser = browser;
-        this.author_id = author_id;*/
