@@ -55,12 +55,11 @@ public class TestEntity {
 
     public boolean insert() throws SQLException, IOException, ClassNotFoundException {
         if (rowUpdater == null) {
-            Connection connection = DataBase.getConnection();
+            Connection connection = DataBase.getConnectionAsSingleton();
             rowUpdater = connection.prepareStatement("insert into test (`name`, `status_id`, " +
                     "`method_name`, `project_id`, `session_id`, `start_time`, `end_time`, `env`, `browser`, `author_id`)" +
                     " VALUES (?,?,?,?,?,?,?,?,?,?)");
         }
-        System.out.println(this.toString());
         rowUpdater.setString(1, this.getName());
         rowUpdater.setInt(2, this.getStatus_id());
         rowUpdater.setString(3, this.getMethod_name());
@@ -71,7 +70,6 @@ public class TestEntity {
         rowUpdater.setString(8, this.getEnv());
         rowUpdater.setString(9, this.getBrowser());
         rowUpdater.setInt(10, this.getAuthor_id());
-        System.out.println(rowUpdater);
         try {
             rowUpdater.executeUpdate();
             return true;

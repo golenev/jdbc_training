@@ -1,14 +1,7 @@
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import utils.DataBase;
 
-import static utils.DataBase.*;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Properties;
 
 abstract public class CRUDAbstractTest {
 
@@ -18,10 +11,10 @@ abstract public class CRUDAbstractTest {
     protected static int project_id;
 
 
-    @BeforeClass
-    void init() throws ClassNotFoundException, IOException, SQLException {
 
-        connection = DataBase.getConnection();
+   /* void prepareForSearch() throws ClassNotFoundException, IOException, SQLException {
+
+        connection = DataBase.getConnectionAsSingleton();
         Statement prepareIds = connection.createStatement();
         prepareIds.executeUpdate("insert into project (name) values ('newTest" + Math.random() + "')");
         prepareIds.executeUpdate("insert into author (name, login, email) values ('newAuthor7', 'newLogin7', 'newemail7@mail.ru')");
@@ -33,9 +26,9 @@ abstract public class CRUDAbstractTest {
         author_id = resultSet.getInt(1);
 
         statement = connection.createStatement();
-    }
+    }*/
 
-    @AfterClass
+
     void exit() throws SQLException {
         connection.close();
     }

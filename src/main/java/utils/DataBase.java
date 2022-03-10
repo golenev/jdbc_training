@@ -12,6 +12,7 @@ public class DataBase {
     private static Connection connection = null;
     private static Properties prop = new Properties();
 
+
     private static void initDB() throws ClassNotFoundException, IOException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try (FileInputStream configFile = new FileInputStream("src/test/resources/jdbc.properties")) {
@@ -20,7 +21,7 @@ public class DataBase {
         connection = DriverManager.getConnection(prop.getProperty("jdbcURL"), prop.getProperty("jdbcUsername"), prop.getProperty("jdbcPassword"));
     }
 
-    public static Connection getConnection() throws SQLException, IOException, ClassNotFoundException {
+    public static Connection getConnectionAsSingleton() throws SQLException, IOException, ClassNotFoundException {
         if (connection == null) initDB();
         return connection;
     }

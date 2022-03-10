@@ -1,29 +1,22 @@
-import com.mysql.cj.exceptions.AssertionFailedException;
 import org.testng.ITestResult;
-import org.testng.annotations.DataProvider;
 import project.ProjectCRUD;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import project.TestEntity;
+import utils.DataBase;
 import utils.RowsName;
 
 import static utils.TestingConfigurations.*;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectCRUDTest extends CRUDAbstractTest {
     private final ProjectCRUD projectCRUD = new ProjectCRUD();
+    private Statement statement = null;
 
-
-    @Test
-    void justTest(ITestResult result) {
-        Assert.assertTrue(true);
-    }
 
 
     @Test
@@ -35,10 +28,22 @@ public class ProjectCRUDTest extends CRUDAbstractTest {
 
 
     @Test
-    void searchRepeatsTest() throws SQLException, IOException, ClassNotFoundException {
-        PreparedStatement rowSelector = getConnection().prepareStatement(getSqlQuery("/patternSearchForId"));
+    void secondTestCase() throws SQLException, IOException, ClassNotFoundException {
+       Connection connection = DataBase.getConnectionAsSingleton();
+        Statement prepareIds = connection.createStatement();
+        prepareIds.executeUpdate("insert into project (name) values ('newTest" + Math.random() + "')");
+        prepareIds.executeUpdate("insert into author (name, login, email) values ('newAuthor7', 'newLogin7', 'newemail7@mail.ru')");
+        ResultSet resultSet1 = prepareIds.executeQuery("select id from project order by id desc;");
+        resultSet1.next();
+        project_id = resultSet1.getInt(1);
+        resultSet1 = prepareIds.executeQuery("select id from author order by id desc;");
+        resultSet1.next();
+        author_id = resultSet1.getInt(1);
+        statement = connection.createStatement();
+        PreparedStatement rowSelector = DataBase.getConnectionAsSingleton().prepareStatement(getSqlQuery("/patternSearchForId"));
         List<Integer> result = new ArrayList<>();
-        ResultSet resultSet = getStatement().executeQuery(getSqlQuery("/selectRepeats"));
+
+        ResultSet resultSet = statement.executeQuery(getSqlQuery("/selectRepeats"));
         while (resultSet.next()) {
             int id = resultSet.getInt(RowsName.ID.getValue());
             rowSelector.setInt(1, id);
@@ -49,27 +54,16 @@ public class ProjectCRUDTest extends CRUDAbstractTest {
             test.setAuthor_id(author_id);
             System.out.println(id);
             System.out.println(test);
-
-             Assert.assertTrue(test.insert());
-
+            Assert.assertTrue(test.insert());
         }
-
     }
 
-    @Test
-    void addTestResultTest() throws ClassNotFoundException, SQLException {
-
-        projectCRUD.create("INSERT INTO `union_reporting`.`test` (`id`, `name`, `status_id`, `method_name`, `project_id`, `session_id`, `start_time`, `end_time`, `env`, `browser`) VALUES ('346', 'qweqwe', '3', 'qweasd', '5', '12', '2022-02-22 10:45:06', '2022-02-22 22:22:22', 'qweqwe', 'chrome');");
-    }
-
-    @Test
+        @Test
     void deleteValue() throws SQLException {
-        projectCRUD.delete("delete from test where id = 346");
+        projectCRUD.delete("DELETE FROM `union_reporting`.`test` WHERE `id` > 345;");
+            projectCRUD.delete("DELETE FROM `union_reporting`.`author`;");
     }
 
-    @Test
-    void updateValue() throws SQLException {
-        projectCRUD.update("update test SET name = 'updateName' where id = 345 ;");
-    }
+
 
 }
