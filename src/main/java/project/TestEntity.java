@@ -1,7 +1,7 @@
 package project;
 
 import utils.DataBase;
-
+import static utils.TestingConfigurations.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
@@ -56,9 +56,7 @@ public class TestEntity {
     public boolean insert() throws SQLException, IOException, ClassNotFoundException {
         if (rowUpdater == null) {
             Connection connection = DataBase.getConnectionAsSingleton();
-            rowUpdater = connection.prepareStatement("insert into test (`name`, `status_id`, " +
-                    "`method_name`, `project_id`, `session_id`, `start_time`, `end_time`, `env`, `browser`, `author_id`)" +
-                    " VALUES (?,?,?,?,?,?,?,?,?,?)");
+            rowUpdater = connection.prepareStatement(getSqlPattern("/insertNewRowIntoTest"));
         }
         rowUpdater.setString(1, this.getName());
         rowUpdater.setInt(2, this.getStatus_id());
@@ -78,7 +76,6 @@ public class TestEntity {
             return false;
         }
     }
-
 
     public int getId() {
         return id;

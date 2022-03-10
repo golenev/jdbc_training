@@ -6,23 +6,20 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.TestingConfigurations.*;
+
 public class ProjectCRUD {
     public static Statement statement;
-    public static String jdbcURL = "jdbc:mysql://localhost:3306/union_reporting?useSSL=false";
-    public static String jdbcUsername = "root";
-    public static String jdbcPassword = "123456";
-    public static PreparedStatement preparedStatement;
-    public static Connection connection;
 
-    public void create(String sql) throws ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        try (Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword)) {
-            statement = connection.createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+    public void create(String sql) throws ClassNotFoundException, SQLException {
+        Class.forName(getJdbcData("/driverName"));
+        Connection connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+                getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
+        statement = connection.createStatement();
+        statement.executeUpdate(sql);
     }
+
 
     public List<TestEntity> read(String sql, Statement statement) throws SQLException {
         List<TestEntity> result = new ArrayList<>();
@@ -40,13 +37,15 @@ public class ProjectCRUD {
     }
 
     public void update(String query) throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+        Connection connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+                getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
         statement = connection.createStatement();
         statement.executeUpdate(query);
     }
 
     public void delete(String query) throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+        Connection connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+                getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
         statement = connection.createStatement();
         statement.executeUpdate(query);
     }

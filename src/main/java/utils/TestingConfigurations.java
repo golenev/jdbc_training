@@ -7,5 +7,11 @@ public class TestingConfigurations {
     public static String getSqlQuery (String key){
         return TestingEnvironment.getCurrentEnvironment("sqlQuery.json").getValue(key).toString();
     }
+    public static String getSqlPattern (String key){
+        return TestingEnvironment.getCurrentEnvironment("sqlPatternQuery.json").getValue(key).toString();
+    }
+    public static String getJdbcData(String key){
+        return TestingEnvironment.getCurrentEnvironment("jdbc.json").getValue(key).toString();
+    }
 
 }

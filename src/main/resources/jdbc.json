@@ -1,0 +1,6 @@
+{
+  "jdbcURL": "jdbc:mysql://localhost:3306/union_reporting?useSSL=false",
+  "jdbcUsername": "root",
+  "jdbcPassword": "123456",
+  "driverName": "com.mysql.cj.jdbc.Driver"
+}

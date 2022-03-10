@@ -8,17 +8,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import static utils.TestingConfigurations.getJdbcData;
+
 public class DataBase {
     private static Connection connection = null;
-    private static Properties prop = new Properties();
+
 
 
     private static void initDB() throws ClassNotFoundException, IOException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        try (FileInputStream configFile = new FileInputStream("src/test/resources/jdbc.properties")) {
-            prop.load(configFile);
-        }
-        connection = DriverManager.getConnection(prop.getProperty("jdbcURL"), prop.getProperty("jdbcUsername"), prop.getProperty("jdbcPassword"));
+        Class.forName(getJdbcData("/driverName"));
+        connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+                getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
     }
 
     public static Connection getConnectionAsSingleton() throws SQLException, IOException, ClassNotFoundException {
