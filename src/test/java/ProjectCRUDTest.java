@@ -19,12 +19,16 @@ public class ProjectCRUDTest {
     private final ProjectCRUD projectCRUD = new ProjectCRUD();
     private Statement statement = null;
 
-
     @Test
-    void firstTestCase() throws SQLException, IOException, ClassNotFoundException {
+    void firstTestCase() {
         Assert.assertTrue(true);
         Connection connection = DataBase.getConnectionAsSingleton();
-        List<TestEntity> metaDataRow = projectCRUD.read((getSqlQuery("/justSelect")), connection.createStatement());
+        List<TestEntity> metaDataRow = null;
+        try {
+            metaDataRow = projectCRUD.read((getSqlQuery("/justSelect")), connection.createStatement());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Logger.getInstance().info(metaDataRow.get(metaDataRow.size() - 1).toString());
         Assert.assertFalse(metaDataRow.isEmpty());
         Assert.assertEquals(metaDataRow.get(metaDataRow.size() - 1).getName(), RowsValues.DONALD_TRUMP.getValue(), "sorry, the data doesn't match");
@@ -33,40 +37,44 @@ public class ProjectCRUDTest {
     }
 
     @Test
-    void secondTestCase() throws SQLException, IOException, ClassNotFoundException {
+    void secondTestCase() {
         Connection connection = DataBase.getConnectionAsSingleton();
-        Statement prepareIds = connection.createStatement();
-        String projectName = "newTest" + Math.random();
-        prepareIds.executeUpdate(String.format(getSqlPattern("/insertValueIntoProjectName"), projectName));
-        prepareIds.executeUpdate(getSqlQuery("/createNewRowInAuthor"));
-        ResultSet resultSetInsertIntoProject = prepareIds.executeQuery(String.format(getSqlPattern("/selectProjectIdWithSomeName"), projectName));
-        resultSetInsertIntoProject.next();
-        int project_id = resultSetInsertIntoProject.getInt(1);
-        ResultSet resultSetInsertIntoAuthor = prepareIds.executeQuery(getSqlQuery("/selectRandomIdFromAuthor"));
-        resultSetInsertIntoAuthor.next();
-        int author_id = resultSetInsertIntoAuthor.getInt(1);
-        statement = connection.createStatement();
-        PreparedStatement rowSelector = DataBase.getConnectionAsSingleton().prepareStatement(getSqlQuery("/patternSearchForId"));
-        ResultSet resultSet = statement.executeQuery(getSqlQuery("/selectRepeats"));
-        while (resultSet.next()) {
-            int id = resultSet.getInt(RowsName.ID.getValue());
-            rowSelector.setInt(1, id);
-            ResultSet row = rowSelector.executeQuery();
-            Assert.assertTrue(row.next(), "sorry, something went wrong");
-            TestEntity test = new TestEntity(row);
-            test.setProject_id(project_id);
-            test.setAuthor_id(author_id);
-            Logger.getInstance().info(String.valueOf(id));
-            Logger.getInstance().info(String.valueOf(test));
-            Assert.assertTrue(test.insert(), "sorry, the data doesn't match");
+        Statement prepareIds = null;
+        try {
+            prepareIds = connection.createStatement();
+            String projectName = "newTest" + Math.random();
+            prepareIds.executeUpdate(String.format(getSqlPattern("/insertValueIntoProjectName"), projectName));
+            prepareIds.executeUpdate(getSqlQuery("/createNewRowInAuthor"));
+            ResultSet resultSetInsertIntoProject = prepareIds.executeQuery(String.format(getSqlPattern("/selectProjectIdWithSomeName"), projectName));
+            resultSetInsertIntoProject.next();
+            int project_id = resultSetInsertIntoProject.getInt(1);
+            ResultSet resultSetInsertIntoAuthor = prepareIds.executeQuery(getSqlQuery("/selectRandomIdFromAuthor"));
+            resultSetInsertIntoAuthor.next();
+            int author_id = resultSetInsertIntoAuthor.getInt(1);
+            statement = connection.createStatement();
+            PreparedStatement rowSelector = DataBase.getConnectionAsSingleton().prepareStatement(getSqlQuery("/patternSearchForId"));
+            ResultSet resultSet = statement.executeQuery(getSqlQuery("/selectRepeats"));
+            while (resultSet.next()) {
+                int id = resultSet.getInt(RowsName.ID.getValue());
+                rowSelector.setInt(1, id);
+                ResultSet row = rowSelector.executeQuery();
+                Assert.assertTrue(row.next(), "sorry, something went wrong");
+                TestEntity test = new TestEntity(row);
+                test.setProject_id(project_id);
+                test.setAuthor_id(author_id);
+                Logger.getInstance().info(String.valueOf(id));
+                Logger.getInstance().info(String.valueOf(test));
+                Assert.assertTrue(test.insert(), "sorry, the data doesn't match");
+            }
+            Logger.getInstance().info("start deleting values from the table");
+            projectCRUD.delete(getSqlQuery("/deleteFromTestWhereIdMore450"));
+            projectCRUD.delete(getSqlQuery("/deleteAuthorTable"));
+            List<TestEntity> deletedRows = projectCRUD.read((getSqlQuery("/deleteValueFromTestWhereIdMore345")), connection.createStatement());
+            Assert.assertTrue(deletedRows.isEmpty(), "sorry, the table is not empty");
+            Logger.getInstance().info("deletion completed successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        Logger.getInstance().info("start deleting values from the table");
-        projectCRUD.delete(getSqlQuery("/deleteFromTestWhereIdMore450"));
-        projectCRUD.delete(getSqlQuery("/deleteAuthorTable"));
-        List<TestEntity> deletedRows = projectCRUD.read((getSqlQuery("/deleteValueFromTestWhereIdMore345")), connection.createStatement());
-        Assert.assertTrue(deletedRows.isEmpty(), "sorry, the table is not empty");
-        Logger.getInstance().info("deletion completed successfully");
     }
 
 }

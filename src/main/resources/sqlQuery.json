@@ -7,6 +7,4 @@
   "createNewRowInAuthor": "insert into author (name, login, email) values ('newAuthor7', 'newLogin7', 'newemail7@mail.ru')",
   "selectRandomIdFromAuthor": "select id from author order by RAND()",
   "deleteValueFromTestWhereIdMore345": "select * FROM `union_reporting`.`test` WHERE `id` > 345;"
-
-
 }

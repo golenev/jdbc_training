@@ -23,18 +23,22 @@ public class TestEntity {
     private static PreparedStatement rowUpdater = null;
 
 
-    public TestEntity(ResultSet resultSet) throws SQLException {
-        this.id = resultSet.getInt(1);
-        this.name = resultSet.getString(2);
-        this.status_id = resultSet.getInt(3);
-        this.method_name = resultSet.getString(4);
-        this.project_id = resultSet.getInt(5);
-        this.session_id = resultSet.getInt(6);
-        this.start_time = resultSet.getString(7);
-        this.end_time = resultSet.getString(8);
-        this.env = resultSet.getString(9);
-        this.browser = resultSet.getString(10);
-        this.author_id = resultSet.getInt(11);
+    public TestEntity(ResultSet resultSet) {
+        try {
+            this.id = resultSet.getInt(1);
+            this.name = resultSet.getString(2);
+            this.status_id = resultSet.getInt(3);
+            this.method_name = resultSet.getString(4);
+            this.project_id = resultSet.getInt(5);
+            this.session_id = resultSet.getInt(6);
+            this.start_time = resultSet.getString(7);
+            this.end_time = resultSet.getString(8);
+            this.env = resultSet.getString(9);
+            this.browser = resultSet.getString(10);
+            this.author_id = resultSet.getInt(11);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public TestEntity(int id, String name, int status_id, String method_name, int project_id,
@@ -53,21 +57,30 @@ public class TestEntity {
         this.author_id = author_id;
     }
 
-    public boolean insert() throws SQLException, IOException, ClassNotFoundException {
+    public boolean insert() {
         if (rowUpdater == null) {
-            Connection connection = DataBase.getConnectionAsSingleton();
-            rowUpdater = connection.prepareStatement(getSqlPattern("/insertNewRowIntoTest"));
+            Connection connection = null;
+            connection = DataBase.getConnectionAsSingleton();
+            try {
+                rowUpdater = connection.prepareStatement(getSqlPattern("/insertNewRowIntoTest"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        rowUpdater.setString(1, this.getName());
-        rowUpdater.setInt(2, this.getStatus_id());
-        rowUpdater.setString(3, this.getMethod_name());
-        rowUpdater.setInt(4, this.getProject_id());
-        rowUpdater.setInt(5, this.getSession_id());
-        rowUpdater.setNull(6, 0);
-        rowUpdater.setString(7, this.getEnd_time());
-        rowUpdater.setString(8, this.getEnv());
-        rowUpdater.setString(9, this.getBrowser());
-        rowUpdater.setInt(10, this.getAuthor_id());
+        try {
+            rowUpdater.setString(1, this.getName());
+            rowUpdater.setInt(2, this.getStatus_id());
+            rowUpdater.setString(3, this.getMethod_name());
+            rowUpdater.setInt(4, this.getProject_id());
+            rowUpdater.setInt(5, this.getSession_id());
+            rowUpdater.setNull(6, 0);
+            rowUpdater.setString(7, this.getEnd_time());
+            rowUpdater.setString(8, this.getEnv());
+            rowUpdater.setString(9, this.getBrowser());
+            rowUpdater.setInt(10, this.getAuthor_id());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         try {
             rowUpdater.executeUpdate();
             return true;
