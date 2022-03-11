@@ -1,4 +1,5 @@
 import aquality.selenium.core.logging.Logger;
+import com.github.javafaker.Faker;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -8,22 +9,20 @@ import project.ModelCRUD;
 import project.TestEntity;
 import utils.DataBase;
 import utils.RowsName;
-
 import java.sql.*;
 import java.util.List;
-
 import static utils.TestingConfigurations.*;
 import static utils.TestingConfigurations.getJdbcData;
+import static utils.RandomData.*;
 
 public class CRUDTestSecond {
     private final ModelCRUD modelCRUD = new ModelCRUD();
-
     private Connection connection = null;
 
     @BeforeClass
     void prepareConnection() {
         String driverName = getJdbcData("/driverName");
-        String jdbcUrl = getJdbcData("/jdbcURL");
+        String jdbcUrl = getValidUrl();
         String jdbcUserName = getJdbcData("/jdbcUsername");
         String jdbcPassword = getJdbcData("/jdbcPassword");
         connection = DataBase.getConnection(driverName, jdbcUrl, jdbcUserName, jdbcPassword);
@@ -32,7 +31,6 @@ public class CRUDTestSecond {
     @BeforeMethod
     void searchAndCopyRepeats() {
         Logger.getInstance().info("Precondition started");
-
         Statement prepareIds = null;
         try {
             prepareIds = connection.createStatement();
@@ -45,7 +43,7 @@ public class CRUDTestSecond {
             ResultSet resultSetInsertIntoAuthor = prepareIds.executeQuery(getSqlQuery("/selectRandomIdFromAuthor"));
             resultSetInsertIntoAuthor.next();
             int author_id = resultSetInsertIntoAuthor.getInt(1);
-          Statement  statement = connection.createStatement();
+            Statement statement = connection.createStatement();
             PreparedStatement rowSelector = connection.prepareStatement(getSqlQuery("/patternSearchForId"));
             ResultSet resultSet = statement.executeQuery(getSqlQuery("/selectRepeats"));
             while (resultSet.next()) {
@@ -58,7 +56,6 @@ public class CRUDTestSecond {
                 testEntity.setAuthor_id(author_id);
                 Logger.getInstance().info(String.valueOf(id));
                 Logger.getInstance().info(String.valueOf(testEntity));
-
                 Assert.assertTrue(insert(testEntity), "sorry, the data doesn't match");
             }
 
@@ -66,8 +63,8 @@ public class CRUDTestSecond {
             e.printStackTrace();
         }
     }
-    public boolean insert(TestEntity testEntity) {
 
+    public boolean insert(TestEntity testEntity) {
         try {
             PreparedStatement rowUpdater = connection.prepareStatement(getSqlPattern("/insertNewRowIntoTest"));
             rowUpdater.setString(1, testEntity.getName());
@@ -80,11 +77,9 @@ public class CRUDTestSecond {
             rowUpdater.setString(8, testEntity.getEnv());
             rowUpdater.setString(9, testEntity.getBrowser());
             rowUpdater.setInt(10, testEntity.getAuthor_id());
-
             rowUpdater.executeUpdate();
             return true;
         } catch (SQLException ex) {
-
             return false;
         }
     }
@@ -92,17 +87,15 @@ public class CRUDTestSecond {
     @Test
     public void simulationStartTest() throws SQLException {
         Logger.getInstance().info("Main test started");
-
-        modelCRUD.update("UPDATE `union_reporting`.`test` SET `status_id` = '1', `project_id` = '4', `session_id` = '12', `browser` = 'firefox' WHERE (`id` = '345');");
+        modelCRUD.update(String.format(getSqlPattern("/updatePattern"), faker.name(), faker.business(), faker.beer(), 344));
         List<TestEntity> metaDataRow = null;
         metaDataRow = modelCRUD.read((getSqlQuery("/justSelect")), connection.createStatement());
-        Logger.getInstance().info(metaDataRow.get(metaDataRow.size() - 1).toString());
+        Logger.getInstance().info(String.valueOf(metaDataRow.get(344).toString()));
     }
 
     @AfterClass
     public void deleteAndCheckValuesTest() {
         Logger.getInstance().info("Postcondition started");
-
         Logger.getInstance().info("start deleting values from the table");
         modelCRUD.delete(getSqlQuery("/deleteFromTestWhereIdMore450"));
         modelCRUD.delete(getSqlQuery("/deleteAuthorTable"));

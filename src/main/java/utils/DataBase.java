@@ -12,13 +12,6 @@ import static utils.TestingConfigurations.getJdbcData;
 public class DataBase {
     private static Connection connection = null;
 
-   /* private static void initDB(){
-        String driverName = getJdbcData("/driverName");
-        String jdbcUrl = getJdbcData("/jdbcURL");
-        String jdbcUserName = getJdbcData("/jdbcUsername");
-        String jdbcPassword = getJdbcData("/jdbcPassword");
-        initDB(driverName, jdbcUrl, jdbcUserName, jdbcPassword);
-    }*/
      private static void initDB(String driverName, String jdbcUrl, String jdbcUserName, String jdbcPassword){
          try {
              Class.forName(driverName);

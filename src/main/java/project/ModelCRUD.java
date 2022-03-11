@@ -16,7 +16,7 @@ public class ModelCRUD {
         }
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+            connection = DriverManager.getConnection(getJdbcData(getValidUrl()),
                     getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class ModelCRUD {
     public void update(String query) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+            connection = DriverManager.getConnection(getValidUrl(),
                     getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
             statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -74,7 +74,7 @@ public class ModelCRUD {
     public void delete(String query) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
+            connection = DriverManager.getConnection(getValidUrl(),
                     getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
             statement = connection.createStatement();
             statement.executeUpdate(query);

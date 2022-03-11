@@ -1,6 +1,9 @@
 package utils;
 
+import static utils.StringUtils.buildSomeString;
+
 public class TestingConfigurations {
+
     private TestingConfigurations() {
     }
 
@@ -13,5 +16,10 @@ public class TestingConfigurations {
     public static String getJdbcData(String key){
         return TestingEnvironment.getCurrentEnvironment("jdbc.json").getValue(key).toString();
     }
+    public static String getValidUrl(){
+        return String.valueOf(buildSomeString(getJdbcData("/jdbcProtocol"), getJdbcData("/jdbcAddress"),
+                getJdbcData("/jdbcPort"), getJdbcData("/jdbcNameDB"), getJdbcData("/jdbcParams")));
+    }
+
 
 }
