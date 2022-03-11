@@ -12,28 +12,38 @@ import static utils.TestingConfigurations.getJdbcData;
 public class DataBase {
     private static Connection connection = null;
 
-    private static void initDB(){
-        try {
-            Class.forName(getJdbcData("/driverName"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection = DriverManager.getConnection(getJdbcData("/jdbcURL"),
-                    getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+   /* private static void initDB(){
+        String driverName = getJdbcData("/driverName");
+        String jdbcUrl = getJdbcData("/jdbcURL");
+        String jdbcUserName = getJdbcData("/jdbcUsername");
+        String jdbcPassword = getJdbcData("/jdbcPassword");
+        initDB(driverName, jdbcUrl, jdbcUserName, jdbcPassword);
+    }*/
+     private static void initDB(String driverName, String jdbcUrl, String jdbcUserName, String jdbcPassword){
+         try {
+             Class.forName(driverName);
+         } catch (ClassNotFoundException e) {
+             e.printStackTrace();
+         }
+         try {
 
-    public static Connection getConnectionAsSingleton(){
-        if (connection == null) initDB();
+             connection = DriverManager.getConnection(jdbcUrl, jdbcUserName, jdbcPassword);
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+     }
+
+
+    public static Connection getConnection(String driverName, String jdbcUrl, String jdbcUserName, String jdbcPassword){
+        if (connection == null) initDB(driverName, jdbcUrl, jdbcUserName, jdbcPassword);
         return connection;
     }
+
 
     public static void closeDB(){
         try {
             connection.close();
+            connection = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }

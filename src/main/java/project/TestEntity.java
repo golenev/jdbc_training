@@ -2,7 +2,7 @@ package project;
 
 import utils.DataBase;
 import static utils.TestingConfigurations.*;
-import java.io.IOException;
+
 import java.sql.*;
 import java.util.Properties;
 
@@ -60,7 +60,7 @@ public class TestEntity {
     public boolean insert() {
         if (rowUpdater == null) {
             Connection connection = null;
-            connection = DataBase.getConnectionAsSingleton();
+
             try {
                 rowUpdater = connection.prepareStatement(getSqlPattern("/insertNewRowIntoTest"));
             } catch (SQLException e) {
@@ -85,7 +85,7 @@ public class TestEntity {
             rowUpdater.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            System.out.println(ex);
+
             return false;
         }
     }

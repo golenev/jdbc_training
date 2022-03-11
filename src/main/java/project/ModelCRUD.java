@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import static utils.TestingConfigurations.*;
-public class ProjectCRUD {
+public class ModelCRUD {
     public static Statement statement;
 
     public void create(String sql) {
@@ -82,5 +82,6 @@ public class ProjectCRUD {
             e.printStackTrace();
         }
     }
+
 
 }
