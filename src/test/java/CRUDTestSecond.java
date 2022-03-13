@@ -7,10 +7,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import project.ModelCRUD;
 import project.TestEntity;
-import utils.DataBase;
-import utils.GeneratorTestingData;
-import utils.NumsAndIndexes;
-import utils.RowsName;
+import utils.*;
+
 import java.sql.*;
 import java.util.List;
 import static utils.TestingConfigurations.*;
@@ -33,7 +31,7 @@ public class CRUDTestSecond {
         Statement prepareIds = null;
         try {
             prepareIds = connection.createStatement();
-            String projectName = "newTest" + Math.random();
+            String projectName = String.valueOf(StringUtils.buildSomeString(getAdvData("/projectName"), Math.random()));
             prepareIds.executeUpdate(String.format(getSqlPattern("/insertValueIntoProjectName"), projectName));
             prepareIds.executeUpdate(String.format(getSqlQuery("/createNewRowInAuthor"), faker.name().firstName(), faker.name().username(), faker.name().title()));
             ResultSet resultSetInsertIntoProject = prepareIds.executeQuery(String.format(getSqlPattern("/selectProjectIdWithSomeName"), projectName));
@@ -45,11 +43,11 @@ public class CRUDTestSecond {
             Statement statement = connection.createStatement();
             PreparedStatement rowSelector = connection.prepareStatement(String.format(getSqlQuery("/patternSearchForId"), getValuesOfDB("/tableName")));
             ResultSet resultSet = statement.executeQuery(String.format(getSqlQuery("/selectRepeats"), getValuesOfDB("/tableName"),
-                    getListOfExpressions().get(0),getListOfExpressions().get(1),
-                    getListOfExpressions().get(2),getListOfExpressions().get(3),
-                    getListOfExpressions().get(4),getListOfExpressions().get(5),
-                    getListOfExpressions().get(6),getListOfExpressions().get(7),
-                    getListOfExpressions().get(8),getListOfExpressions().get(9)));
+                    getListOfExpressions().get(NumsAndIndexes.ZERO.getValue()),getListOfExpressions().get(NumsAndIndexes.ONE.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.TWO.getValue()),getListOfExpressions().get(NumsAndIndexes.THREE.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.FOUR.getValue()),getListOfExpressions().get(NumsAndIndexes.FIVE.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.SIX.getValue()),getListOfExpressions().get(NumsAndIndexes.SEVEN.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.EIGHT.getValue()),getListOfExpressions().get(NumsAndIndexes.EIGHT.getValue())));
             while (resultSet.next()) {
                 int id = resultSet.getInt(RowsName.ID.getValue());
                 rowSelector.setInt(NumsAndIndexes.ONE.getValue(), id);

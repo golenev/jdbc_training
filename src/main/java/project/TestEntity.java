@@ -1,6 +1,8 @@
 package project;
 
 import utils.DataBase;
+import utils.NumsAndIndexes;
+
 import static utils.TestingConfigurations.*;
 
 import java.sql.*;
@@ -25,17 +27,17 @@ public class TestEntity {
 
     public TestEntity(ResultSet resultSet) {
         try {
-            this.id = resultSet.getInt(1);
-            this.name = resultSet.getString(2);
-            this.status_id = resultSet.getInt(3);
-            this.method_name = resultSet.getString(4);
-            this.project_id = resultSet.getInt(5);
-            this.session_id = resultSet.getInt(6);
-            this.start_time = resultSet.getString(7);
-            this.end_time = resultSet.getString(8);
-            this.env = resultSet.getString(9);
-            this.browser = resultSet.getString(10);
-            this.author_id = resultSet.getInt(11);
+            this.id = resultSet.getInt(NumsAndIndexes.ONE.getValue());
+            this.name = resultSet.getString(NumsAndIndexes.TWO.getValue());
+            this.status_id = resultSet.getInt(NumsAndIndexes.THREE.getValue());
+            this.method_name = resultSet.getString(NumsAndIndexes.FOUR.getValue());
+            this.project_id = resultSet.getInt(NumsAndIndexes.FIVE.getValue());
+            this.session_id = resultSet.getInt(NumsAndIndexes.SIX.getValue());
+            this.start_time = resultSet.getString(NumsAndIndexes.SEVEN.getValue());
+            this.end_time = resultSet.getString(NumsAndIndexes.EIGHT.getValue());
+            this.env = resultSet.getString(NumsAndIndexes.NINE.getValue());
+            this.browser = resultSet.getString(NumsAndIndexes.TEN.getValue());
+            this.author_id = resultSet.getInt(NumsAndIndexes.ELEVEN.getValue());
         } catch (SQLException e) {
             e.printStackTrace();
         }

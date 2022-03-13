@@ -24,8 +24,8 @@ public class TestingConfigurations {
         return TestingEnvironment.getCurrentEnvironment("valuesOfDB.json").getValue(key).toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(getValuesOfDB("/tableName"));
-    }
+   public static String getAdvData(String key){
+       return TestingEnvironment.getCurrentEnvironment("someAnotherTestingData.json").getValue(key).toString();
+   }
 
 }
