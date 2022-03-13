@@ -11,6 +11,7 @@ import utils.*;
 
 import java.sql.*;
 import java.util.List;
+
 import static utils.TestingConfigurations.*;
 import static utils.TestingConfigurations.getJdbcData;
 import static utils.RandomData.*;
@@ -22,7 +23,7 @@ public class CRUDTestSecond {
 
     @BeforeClass
     void prepareConnection() {
-       connection = DataBase.getConnection(getJdbcData("/driverName"), getValidUrl(), getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
+        connection = DataBase.getConnection(getJdbcData("/driverName"), getValidUrl(), getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
     }
 
     @BeforeMethod
@@ -43,11 +44,11 @@ public class CRUDTestSecond {
             Statement statement = connection.createStatement();
             PreparedStatement rowSelector = connection.prepareStatement(String.format(getSqlQuery("/patternSearchForId"), getValuesOfDB("/tableName")));
             ResultSet resultSet = statement.executeQuery(String.format(getSqlQuery("/selectRepeats"), getValuesOfDB("/tableName"),
-                    getListOfExpressions().get(NumsAndIndexes.ZERO.getValue()),getListOfExpressions().get(NumsAndIndexes.ONE.getValue()),
-                    getListOfExpressions().get(NumsAndIndexes.TWO.getValue()),getListOfExpressions().get(NumsAndIndexes.THREE.getValue()),
-                    getListOfExpressions().get(NumsAndIndexes.FOUR.getValue()),getListOfExpressions().get(NumsAndIndexes.FIVE.getValue()),
-                    getListOfExpressions().get(NumsAndIndexes.SIX.getValue()),getListOfExpressions().get(NumsAndIndexes.SEVEN.getValue()),
-                    getListOfExpressions().get(NumsAndIndexes.EIGHT.getValue()),getListOfExpressions().get(NumsAndIndexes.EIGHT.getValue())));
+                    getListOfExpressions().get(NumsAndIndexes.ZERO.getValue()), getListOfExpressions().get(NumsAndIndexes.ONE.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.TWO.getValue()), getListOfExpressions().get(NumsAndIndexes.THREE.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.FOUR.getValue()), getListOfExpressions().get(NumsAndIndexes.FIVE.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.SIX.getValue()), getListOfExpressions().get(NumsAndIndexes.SEVEN.getValue()),
+                    getListOfExpressions().get(NumsAndIndexes.EIGHT.getValue()), getListOfExpressions().get(NumsAndIndexes.EIGHT.getValue()), NumsAndIndexes.TEN.getValue()));
             while (resultSet.next()) {
                 int id = resultSet.getInt(RowsName.ID.getValue());
                 rowSelector.setInt(NumsAndIndexes.ONE.getValue(), id);
@@ -60,10 +61,8 @@ public class CRUDTestSecond {
                 Logger.getInstance().info(String.valueOf(testEntity));
                 Assert.assertTrue(insert(testEntity), "sorry, the data doesn't match");
             }
-
         } catch (SQLException e) {
-            Logger.getInstance().error("sql exception occurred in the method searchAndCopyRepeats()");;
-            ;
+            Logger.getInstance().error("sql exception occurred in the method searchAndCopyRepeats()");
         }
     }
 
@@ -89,7 +88,7 @@ public class CRUDTestSecond {
     }
 
     @Test
-    public void simulationStartTest(){
+    public void simulationStartTest() {
         Logger.getInstance().info("Main test started");
         modelCRUD.update(String.format(getSqlPattern("/updatePattern"), faker.name(), faker.business(), faker.beer(),
                 NumsAndIndexes.THREE_HUNDRED_FORTY_FOUR.getValue()));
@@ -111,9 +110,10 @@ public class CRUDTestSecond {
         List<TestEntity> deletedRows = null;
         try {
             deletedRows = modelCRUD.read((String.format(getSqlQuery("/deleteValueFromTestWhereIdMoreThanValue"),
-                    NumsAndIndexes.THREE_HUNDRED_FORTY_FIVE.getValue() )), connection.createStatement());
+                    NumsAndIndexes.THREE_HUNDRED_FORTY_FIVE.getValue())), connection.createStatement());
         } catch (SQLException e) {
-            Logger.getInstance().error("sql exception occurred in the method deleteAndCheckValuesTest()");;
+            Logger.getInstance().error("sql exception occurred in the method deleteAndCheckValuesTest()");
+            ;
         }
         Assert.assertTrue(deletedRows.isEmpty(), "sorry, the table is not empty");
         Logger.getInstance().info("deletion completed successfully");

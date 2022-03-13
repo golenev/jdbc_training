@@ -1,5 +1,5 @@
 {
-  "selectRepeats": "select * from %s where id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' limit 10",
+  "selectRepeats": "select * from %s where id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' limit %s",
   "justSelect": "select * from test",
   "selectAndSort": "select * from test order by id desc",
   "patternSearchForId": "select * from %s where id = ?",
