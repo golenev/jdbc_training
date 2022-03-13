@@ -1,12 +1,19 @@
 package utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GeneratorTestingData {
+    public static List<String> expressions = new ArrayList<>();
 
-     public static List givenList = new ArrayList(Arrays.asList("%0%0%",
-            "%1%1%", "%2%2%", "%3%3%", "%4%4%"
-            , "%5%5%", "%6%6%", "%7%7%", "%8%8%", "%9%9%"));
+    public static List<String> getListOfExpressions() {
+        String percent = "%";
+        for (int num = 0; num < 10; num++) {
+            String value = String.valueOf(StringUtils.buildSomeString(percent, num, percent, num, percent));
+            expressions.add(value);
+        }
+        return expressions;
+    }
+
 }
+

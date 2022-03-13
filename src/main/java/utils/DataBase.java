@@ -1,5 +1,7 @@
 package utils;
 
+import aquality.selenium.core.logging.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,29 +18,26 @@ public class DataBase {
          try {
              Class.forName(driverName);
          } catch (ClassNotFoundException e) {
-             e.printStackTrace();
+             Logger.getInstance().error("ClassNotFoundException occurred in the method initDB()");
          }
          try {
-
              connection = DriverManager.getConnection(jdbcUrl, jdbcUserName, jdbcPassword);
          } catch (SQLException e) {
-             e.printStackTrace();
+             Logger.getInstance().error("sql exception occurred in the method initDB()");
          }
      }
-
 
     public static Connection getConnection(String driverName, String jdbcUrl, String jdbcUserName, String jdbcPassword){
         if (connection == null) initDB(driverName, jdbcUrl, jdbcUserName, jdbcPassword);
         return connection;
     }
 
-
     public static void closeDB(){
         try {
             connection.close();
             connection = null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method initDB()");
         }
     }
 }

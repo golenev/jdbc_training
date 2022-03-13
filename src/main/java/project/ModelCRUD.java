@@ -1,37 +1,16 @@
 package project;
 
+import aquality.selenium.core.logging.Logger;
 import utils.RowsName;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import static utils.TestingConfigurations.*;
+
 public class ModelCRUD {
     public static Statement statement;
-
-    public void create(String sql) {
-        try {
-            Class.forName(getJdbcData("/driverName"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(getJdbcData(getValidUrl()),
-                    getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public List<TestEntity> read(String sql, Statement statement) {
         List<TestEntity> result = new ArrayList<>();
@@ -39,7 +18,7 @@ public class ModelCRUD {
         try {
             resultSet = statement.executeQuery(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method read()");
         }
         while (true) {
             try {
@@ -53,7 +32,7 @@ public class ModelCRUD {
                         resultSet.getString(RowsName.BROWSER.getValue()),
                         resultSet.getInt(RowsName.AUTHOR_ID.getValue())));
             } catch (SQLException e) {
-                e.printStackTrace();
+                Logger.getInstance().error("sql exception occurred in the method read()");
             }
         }
         return result;
@@ -67,7 +46,7 @@ public class ModelCRUD {
             statement = connection.createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method update()");
         }
     }
 
@@ -79,9 +58,8 @@ public class ModelCRUD {
             statement = connection.createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method delete()");
         }
     }
-
 
 }

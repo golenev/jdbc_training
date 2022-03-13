@@ -1,11 +1,11 @@
 {
-  "selectRepeats": "select * from test where id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' limit 10",
+  "selectRepeats": "select * from %s where id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' or id like '%s' limit 10",
   "justSelect": "select * from test",
   "selectAndSort": "select * from test order by id desc",
-  "patternSearchForId": "select * from test where id = ?",
+  "patternSearchForId": "select * from %s where id = ?",
   "deleteFromTestWhereIdMoreThanValue": "DELETE FROM `union_reporting`.`test` WHERE `id` > '%s';",
   "deleteAuthorTable": "DELETE FROM `union_reporting`.`author`;",
-  "createNewRowInAuthor": "insert into author (name, login, email) values ('newAuthor7', 'newLogin7', 'newemail7@mail.ru')",
+  "createNewRowInAuthor": "insert into author (name, login, email) values ('%s', '%s', '%s')",
   "selectRandomIdFromAuthor": "select id from author order by RAND()",
   "deleteValueFromTestWhereIdMoreThanValue": "select * FROM `union_reporting`.`test` WHERE `id` > '%s';"
 }

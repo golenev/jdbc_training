@@ -20,6 +20,12 @@ public class TestingConfigurations {
         return String.valueOf(buildSomeString(getJdbcData("/jdbcProtocol"), getJdbcData("/jdbcAddress"),
                 getJdbcData("/jdbcPort"), getJdbcData("/jdbcNameDB"), getJdbcData("/jdbcParams")));
     }
+    public static String getValuesOfDB (String key){
+        return TestingEnvironment.getCurrentEnvironment("valuesOfDB.json").getValue(key).toString();
+    }
 
+    public static void main(String[] args) {
+        System.out.println(getValuesOfDB("/tableName"));
+    }
 
 }

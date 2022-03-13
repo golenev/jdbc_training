@@ -24,11 +24,7 @@ public class CRUDTestSecond {
 
     @BeforeClass
     void prepareConnection() {
-        String driverName = getJdbcData("/driverName");
-        String jdbcUrl = getValidUrl();
-        String jdbcUserName = getJdbcData("/jdbcUsername");
-        String jdbcPassword = getJdbcData("/jdbcPassword");
-        connection = DataBase.getConnection(driverName, jdbcUrl, jdbcUserName, jdbcPassword);
+       connection = DataBase.getConnection(getJdbcData("/driverName"), getValidUrl(), getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
     }
 
     @BeforeMethod
@@ -39,7 +35,7 @@ public class CRUDTestSecond {
             prepareIds = connection.createStatement();
             String projectName = "newTest" + Math.random();
             prepareIds.executeUpdate(String.format(getSqlPattern("/insertValueIntoProjectName"), projectName));
-            prepareIds.executeUpdate(getSqlQuery("/createNewRowInAuthor"));
+            prepareIds.executeUpdate(String.format(getSqlQuery("/createNewRowInAuthor"), faker.name().firstName(), faker.name().username(), faker.name().title()));
             ResultSet resultSetInsertIntoProject = prepareIds.executeQuery(String.format(getSqlPattern("/selectProjectIdWithSomeName"), projectName));
             resultSetInsertIntoProject.next();
             int project_id = resultSetInsertIntoProject.getInt(NumsAndIndexes.ONE.getValue());
@@ -47,13 +43,13 @@ public class CRUDTestSecond {
             resultSetInsertIntoAuthor.next();
             int author_id = resultSetInsertIntoAuthor.getInt(NumsAndIndexes.ONE.getValue());
             Statement statement = connection.createStatement();
-            PreparedStatement rowSelector = connection.prepareStatement(getSqlQuery("/patternSearchForId"));
-            ResultSet resultSet = statement.executeQuery(String.format(getSqlQuery("/selectRepeats"),
-                    givenList.get(NumsAndIndexes.ZERO.getValue()),givenList.get(NumsAndIndexes.ONE.getValue()),
-                    givenList.get(NumsAndIndexes.TWO.getValue()),givenList.get(NumsAndIndexes.THREE.getValue()),
-                    givenList.get(NumsAndIndexes.FOUR.getValue()),givenList.get(NumsAndIndexes.FIVE.getValue()),
-                    givenList.get(NumsAndIndexes.SIX.getValue()),givenList.get(NumsAndIndexes.SEVEN.getValue()),
-                    givenList.get(NumsAndIndexes.EIGHT.getValue()),givenList.get(NumsAndIndexes.NINE.getValue())));
+            PreparedStatement rowSelector = connection.prepareStatement(String.format(getSqlQuery("/patternSearchForId"), getValuesOfDB("/tableName")));
+            ResultSet resultSet = statement.executeQuery(String.format(getSqlQuery("/selectRepeats"), getValuesOfDB("/tableName"),
+                    getListOfExpressions().get(0),getListOfExpressions().get(1),
+                    getListOfExpressions().get(2),getListOfExpressions().get(3),
+                    getListOfExpressions().get(4),getListOfExpressions().get(5),
+                    getListOfExpressions().get(6),getListOfExpressions().get(7),
+                    getListOfExpressions().get(8),getListOfExpressions().get(9)));
             while (resultSet.next()) {
                 int id = resultSet.getInt(RowsName.ID.getValue());
                 rowSelector.setInt(NumsAndIndexes.ONE.getValue(), id);
@@ -68,7 +64,8 @@ public class CRUDTestSecond {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method searchAndCopyRepeats()");;
+            ;
         }
     }
 
@@ -87,18 +84,23 @@ public class CRUDTestSecond {
             rowUpdater.setInt(NumsAndIndexes.TEN.getValue(), testEntity.getAuthor_id());
             rowUpdater.executeUpdate();
             return true;
-        } catch (SQLException ex) {
+        } catch
+        (SQLException ex) {
             return false;
         }
     }
 
     @Test
-    public void simulationStartTest() throws SQLException {
+    public void simulationStartTest(){
         Logger.getInstance().info("Main test started");
         modelCRUD.update(String.format(getSqlPattern("/updatePattern"), faker.name(), faker.business(), faker.beer(),
                 NumsAndIndexes.THREE_HUNDRED_FORTY_FOUR.getValue()));
         List<TestEntity> metaDataRow = null;
-        metaDataRow = modelCRUD.read((getSqlQuery("/justSelect")), connection.createStatement());
+        try {
+            metaDataRow = modelCRUD.read((getSqlQuery("/justSelect")), connection.createStatement());
+        } catch (SQLException e) {
+            Logger.getInstance().error("sql exception occurred in the method simulationStartTest()");
+        }
         Logger.getInstance().info(String.valueOf(metaDataRow.get(NumsAndIndexes.THREE_HUNDRED_FORTY_FOUR.getValue()).toString()));
     }
 
@@ -113,7 +115,7 @@ public class CRUDTestSecond {
             deletedRows = modelCRUD.read((String.format(getSqlQuery("/deleteValueFromTestWhereIdMoreThanValue"),
                     NumsAndIndexes.THREE_HUNDRED_FORTY_FIVE.getValue() )), connection.createStatement());
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method deleteAndCheckValuesTest()");;
         }
         Assert.assertTrue(deletedRows.isEmpty(), "sorry, the table is not empty");
         Logger.getInstance().info("deletion completed successfully");

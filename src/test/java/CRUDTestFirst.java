@@ -9,11 +9,13 @@ import utils.DataBase;
 import utils.NumsAndIndexes;
 
 import static utils.TestingConfigurations.*;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
 import static utils.TestingConfigurations.getSqlQuery;
 import static utils.GeneratorActualDateAndTime.*;
 
@@ -23,12 +25,8 @@ public class CRUDTestFirst {
     private Connection connection = null;
 
     @BeforeClass
-    void prepareConnection(){
-        String driverName = getJdbcData("/driverName");
-        String jdbcUrl = getValidUrl();
-        String jdbcUserName = getJdbcData("/jdbcUsername");
-        String jdbcPassword = getJdbcData("/jdbcPassword");
-        connection = DataBase.getConnection(driverName,jdbcUrl, jdbcUserName, jdbcPassword);
+    void prepareConnection() {
+        connection = DataBase.getConnection(getJdbcData("/driverName"), getValidUrl(), getJdbcData("/jdbcUsername"), getJdbcData("/jdbcPassword"));
     }
 
     @Test
@@ -39,7 +37,7 @@ public class CRUDTestFirst {
             resultSet.next();
             TestEntity testEntity = new TestEntity(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method firstTestCase()");
         }
     }
 
@@ -47,7 +45,7 @@ public class CRUDTestFirst {
     public void onTestSuccess(ITestResult testResult) throws SQLException {
         ResultSet resultSet = connection.createStatement().executeQuery(getSqlQuery("/selectAndSort"));
         String sql = String.format(getSqlPattern("/insertNewDataToRowTest")
-                ,testResult.getName(), NumsAndIndexes.THREE.getValue(),  testResult.getStatus(),
+                , testResult.getName(), NumsAndIndexes.THREE.getValue(), testResult.getStatus(),
                 NumsAndIndexes.TWO.getValue(), NumsAndIndexes.FIVE.getValue(),
                 getTimeAndDate(), getTimeAndDate(), testResult.getInstanceName(), testResult.getFactoryParameters());
         try {
@@ -59,9 +57,7 @@ public class CRUDTestFirst {
             Assert.assertFalse(metaDataRow.isEmpty(), "sorry the rows is not empty");
             DataBase.closeDB();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getInstance().error("sql exception occurred in the method onTestSuccess()");
         }
-
     }
-
 }
