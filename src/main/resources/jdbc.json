@@ -1,5 +1,4 @@
 {
-
   "jdbcProtocol": "jdbc:mysql:",
   "jdbcAddress": "//localhost:",
   "jdbcPort": "3306",
