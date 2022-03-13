@@ -6,6 +6,8 @@ import org.testng.annotations.*;
 import project.ModelCRUD;
 import project.TestEntity;
 import utils.DataBase;
+import utils.NumsAndIndexes;
+
 import static utils.TestingConfigurations.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,7 +35,7 @@ public class CRUDTestFirst {
     void firstTestCase() {
         Assert.assertTrue(true);
         try {
-            ResultSet resultSet = connection.createStatement().executeQuery("select * from test order by id desc");
+            ResultSet resultSet = connection.createStatement().executeQuery(getSqlQuery("/selectAndSort"));
             resultSet.next();
             TestEntity testEntity = new TestEntity(resultSet);
         } catch (SQLException e) {
@@ -43,16 +45,17 @@ public class CRUDTestFirst {
 
     @AfterMethod
     public void onTestSuccess(ITestResult testResult) throws SQLException {
-        ResultSet resultSet = connection.createStatement().executeQuery("select * from test order by id desc");
-        String sql = String.format("insert into test (name, status_id, method_name, project_id, session_id, start_time, end_time, env, browser, author_id) \n" +
-                        "values ('%s', '3', '%s', 2, 5, '%s', '%s', '%s', '%s', null);"
-                ,testResult.getName(), testResult.getStatus(), getTimeAndDate(), getTimeAndDate(), testResult.getInstanceName(), testResult.getFactoryParameters());
+        ResultSet resultSet = connection.createStatement().executeQuery(getSqlQuery("/selectAndSort"));
+        String sql = String.format(getSqlPattern("/insertNewDataToRowTest")
+                ,testResult.getName(), NumsAndIndexes.THREE.getValue(),  testResult.getStatus(),
+                NumsAndIndexes.TWO.getValue(), NumsAndIndexes.FIVE.getValue(),
+                getTimeAndDate(), getTimeAndDate(), testResult.getInstanceName(), testResult.getFactoryParameters());
         try {
             Statement statement = connection.createStatement();
             statement.execute(sql);
             List<TestEntity> metaDataRow = null;
             metaDataRow = modelCRUD.read((getSqlQuery("/justSelect")), connection.createStatement());
-            Logger.getInstance().info(metaDataRow.get(metaDataRow.size() - 1).toString());
+            Logger.getInstance().info(metaDataRow.get(metaDataRow.size() - NumsAndIndexes.ONE.getValue()).toString());
             Assert.assertFalse(metaDataRow.isEmpty(), "sorry the rows is not empty");
             DataBase.closeDB();
         } catch (SQLException e) {
