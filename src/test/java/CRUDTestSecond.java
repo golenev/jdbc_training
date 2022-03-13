@@ -113,7 +113,6 @@ public class CRUDTestSecond {
                     NumsAndIndexes.THREE_HUNDRED_FORTY_FIVE.getValue())), connection.createStatement());
         } catch (SQLException e) {
             Logger.getInstance().error("sql exception occurred in the method deleteAndCheckValuesTest()");
-            ;
         }
         Assert.assertTrue(deletedRows.isEmpty(), "sorry, the table is not empty");
         Logger.getInstance().info("deletion completed successfully");
